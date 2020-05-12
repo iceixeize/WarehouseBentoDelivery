@@ -81,6 +81,8 @@ Route::group(['middleware' => ['auth', 'domain']], function() {
         return view('welcome');
     });
 
+    Route::get('/user/{id}', 'UserController@show');
+
     // Route::name('manage.users')->get('/users', function () {
     //     return view('manage._manage_user');
     // });
