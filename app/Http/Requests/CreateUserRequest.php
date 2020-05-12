@@ -33,7 +33,7 @@ class CreateUserRequest extends FormRequest
                 'password' => 'required|string|min:4|confirmed',
                 'gender' => ['required', Rule::in(['male', 'female'])],
                 'userRolesId' => 'required|exists:user_roles,user_roles_id',
-                'idCard' => ['string', 'max:13', 'unique:user,id_card', new Identity],
+                'idCard' => ['string', 'max:13', 'unique:users,id_card', new Identity],
                 'birthday' => 'required|date_format:d-m-Y',
         ];
     }

@@ -73,7 +73,7 @@ Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['aut
 });
 
 Route::group(['middleware' => ['auth', 'domain']], function() {
-    Route::get('/dashboard-datatable', 'Manage\Dashboard@index');
+    Route::get('/dashboard-datatable', 'Manage\Dashboard@index')->name('dashboard');
 
     Route::name('manage.users.datatable')->get('/users-datatable', 'Manage\ManageUserController@datatable');
     Route::resource('/users', 'Manage\ManageUserController');

@@ -32,6 +32,16 @@ class ManageUserController extends MyController
     {
         return view('manage._manage_user');
     }
+    
+    public function datatable(Request $request) {
+        $data = \App\User::with('userRoles');
+            if(!$this->isSuperAdmin()) {
+                $data->where('user_roles_id', '!=', 1);
+            }
+
+            $data = $data->paginate($request->length);
+            return new DataTableCollectionResource($data);
+    }
 
     /**
      * Show the user with the given ID.
@@ -45,15 +55,7 @@ class ManageUserController extends MyController
         dd(['data' => $data]);
     }
 
-    public function datatable(Request $request) {
-        $data = \App\User::with('userRoles');
-            if(!$this->isSuperAdmin()) {
-                $data->where('user_roles_id', '!=', 1);
-            }
-
-            $data = $data->paginate($request->length);
-            return new DataTableCollectionResource($data);
-    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -75,18 +77,7 @@ class ManageUserController extends MyController
     public function store(\App\Http\Requests\CreateUserRequest $request)
     {
         $data = (array) $request->all();
-        $create = User::create([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'gender' => $data['gender'],
-            'user_roles_id' => $data['userRolesId'],
-            'id_card' => $data['idCard'],
-            'birthday' => $data['birthday'],
-            'tel' => $data['tel'],
-        ]);
+        $create = $this->users->create($data);
 
         if($create) {
             return redirect()->route('users.index')->with('success', 'เพิ่มผู้ใช้แล้ว');
@@ -104,11 +95,15 @@ class ManageUserController extends MyController
      */
     public function edit($id)
     {
-        //
-        // dd(['edit_id' => $id]);
+
         $roles = [];
+
         if($this->isSuperAdmin()) {
             $roles = $this->getUserRoles();
+
+            if(empty($roles)) {
+                return redirect()->route('dashboard');
+            }
         }
         return view('manage._edit_user', ['userData' => Auth::user(), 'id' => $id, 'roles' => $roles]);
     }
@@ -121,8 +116,45 @@ class ManageUserController extends MyController
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   
+        $params = [];
+        // $params = $request->except(['_token', '_method']);
+
+        if($request->has('firstname')) {
+            $params['firstname'] = $request->firstname;
+        }
+        if($request->has('lastname')) {
+            $params['lastname'] = $request->lastname;
+        }
+        if($request->has('idCard')) {
+            $params['id_card'] = $request->idCard;
+        }
+        if($request->has('tel')) {
+            $params['tel'] = $request->tel;
+        }
+        if($request->has('gender')) {
+            $params['gender'] = $request->gender;
+        }
+        if($request->has('birthday')) {
+            $params['birthday'] = $request->birthday;
+        }
+        $update = $this->users->update($id, $params);
+
+        if($this->isSuperAdmin() && empty($this->userRoles)) {
+            dd('11');
+            return redirect()->route('dashboard')->with('error', 'ไม่สามารถทำรายการได้ กรุณาตรวจสอบ User roles ในระบบ');
+        }
+
+        if(!$update) 
+        {
+            dd('22');
+            return redirect()->route('dashboard')->with('error', 'ไม่สามารถทำรายการได้ กรุณาลองอีกครั้ง');
+        }
+        else 
+        {
+            dd('33');
+            return redirect()->route('users.edit', [$id])->with('success', 'แก้ไขรายการสำเร็จ');
+        }
     }
 
     /**

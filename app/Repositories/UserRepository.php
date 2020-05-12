@@ -21,6 +21,10 @@ class UserRepository implements AllRepositoryInterface
         return User::find($id);
     }
 
+    public function create($params = []) {
+        return User::create($params);
+    }
+
     /**
      * Get's all posts.
      *
@@ -49,6 +53,7 @@ class UserRepository implements AllRepositoryInterface
      */
     public function update($id, array $data)
     {
-        User::find($id)->update($data);
+dd(['id' => $id, 'data' => $data]);
+        User::where('user_id', $id)->update($data);
     }
 }
