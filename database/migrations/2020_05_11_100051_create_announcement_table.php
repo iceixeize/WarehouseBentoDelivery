@@ -15,6 +15,12 @@ class CreateAnnouncementTable extends Migration
     {
         Schema::create('announcement', function (Blueprint $table) {
             $table->id();
+            $table->string('topic', 100);
+            $table->text('text');
+            $table->date('date_start');
+            $table->data('date_end');
+            $table->text('assign_to');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

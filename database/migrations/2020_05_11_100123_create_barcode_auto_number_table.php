@@ -14,7 +14,12 @@ class CreateBarcodeAutoNumberTable extends Migration
     public function up()
     {
         Schema::create('barcode_auto_number', function (Blueprint $table) {
-            $table->id();
+            $table->integer('auto_number_id');
+            $table->string('keyword', 20);
+            $table->string('value', 20);
+            $table->integer('seq');
+            $table->string('prefix', 5);
+
             $table->timestamps();
         });
     }

@@ -15,7 +15,15 @@ class CreateBoxesTable extends Migration
     {
         Schema::create('boxes', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('box_name', 45);
+            $table->decimal('box_price', 6, 2);
+            $table->tinyInteger('deleted');
+            $table->string('barcode', 45);
+            $table->float('width');
+            $table->decimal('cost_box_price', 6, 2);
+            $table->decimal('resend_box_price', 6, 2);
+
+            $table->timestamps(0);
         });
     }
 

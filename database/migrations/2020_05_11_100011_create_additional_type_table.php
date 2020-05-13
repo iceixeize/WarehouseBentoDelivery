@@ -14,7 +14,9 @@ class CreateAdditionalTypeTable extends Migration
     public function up()
     {
         Schema::create('additional_type', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('additional_type_id');
+            $table->text('additional_type_text');
+            $table->tinyInteger('deleted');
             $table->timestamps();
         });
     }

@@ -15,6 +15,12 @@ class CreateCountryZoneTable extends Migration
     {
         Schema::create('country_zone', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('country_id')->references('id')->on('country');
+            $table->integer('stpz_id');
+            $table->integer('weight_limit');
+            $table->tinyInteger('active');
+            $table->tinyInteger('deleted');
+            
             $table->timestamps();
         });
     }

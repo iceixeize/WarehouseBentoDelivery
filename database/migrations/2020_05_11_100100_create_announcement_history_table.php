@@ -15,6 +15,10 @@ class CreateAnnouncementHistoryTable extends Migration
     {
         Schema::create('announcement_history', function (Blueprint $table) {
             $table->id();
+            $table->integer('announcement_id');
+            $table->timestamp('datetime');
+            $table->integer('action_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

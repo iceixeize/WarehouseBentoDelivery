@@ -15,6 +15,9 @@ class CreateAccessWarehouseTable extends Migration
     {
         Schema::create('access_warehouse', function (Blueprint $table) {
             $table->id();
+            $table->integer('warehouse_id');
+            $table->integer('user_id');
+            $table->tinyInteger('deleted');
             $table->timestamps();
         });
     }

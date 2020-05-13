@@ -15,7 +15,10 @@ class CreateConfigSystemTable extends Migration
     {
         Schema::create('config_system', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('config_system_type', 45);
+            $table->string('config_system_type', 45);
+            $table->string('config_system_type', 150);
+            $table->timestamps(0);
         });
     }
 

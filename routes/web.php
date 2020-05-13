@@ -83,15 +83,6 @@ Route::group(['middleware' => ['auth', 'domain']], function() {
 
     Route::get('/user/{id}', 'UserController@show');
 
-    // Route::name('manage.users')->get('/users', function () {
-    //     return view('manage._manage_user');
-    // });
-    // Route::resource('/users', 'Manage\ManageUserController');
-
-    // Route::get('/test', function() {
-    //     return view('test');
-    // });
-
     Route::get('/test', 'TestController@index')->name('test.test');
 
     Route::get('/dashboard', function () {

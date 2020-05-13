@@ -15,7 +15,10 @@ class CreateCjAreaCodeTable extends Migration
     {
         Schema::create('cj_area_code', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('rdc_name', 45);
+            $table->integer('zipcode');
+            $table->string('area_code', 10);
+            $table->timestamps(0);
         });
     }
 

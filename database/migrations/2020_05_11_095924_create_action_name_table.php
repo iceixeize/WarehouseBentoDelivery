@@ -15,7 +15,10 @@ class CreateActionNameTable extends Migration
     {
         Schema::create('action_name', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('action_name', 100);
+            $table->integer('action_type_id');
+            $table->tinyInteger('deleted');
+            $table->timestamps(0);
         });
     }
 

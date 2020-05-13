@@ -42,7 +42,7 @@ class UserRepository implements AllRepositoryInterface
      */
     public function delete($id)
     {
-        User::destroy($id);
+        return User::destroy($id);
     }
 
     /**
@@ -53,7 +53,7 @@ class UserRepository implements AllRepositoryInterface
      */
     public function update($id, array $data)
     {
-dd(['id' => $id, 'data' => $data]);
-        User::where('user_id', $id)->update($data);
+        // dd(['id' => $id, 'data' => $data]);
+        return User::where('user_id', $id)->update($data);
     }
 }

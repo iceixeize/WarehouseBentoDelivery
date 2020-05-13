@@ -15,7 +15,11 @@ class CreateUserRolesHistoryTable extends Migration
     {
         Schema::create('user_roles_history', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->integer('user_roles_id');
+            $table->timestamp('datetime');
+            $table->integer('user_id');
+            $table->integer('action_id');
+            $table->timestamps(0);
         });
     }
 

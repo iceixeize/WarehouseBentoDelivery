@@ -75,8 +75,11 @@ class ManageUserController extends MyController
      * @return \Illuminate\Http\Response
      */
     public function store(\App\Http\Requests\CreateUserRequest $request)
+    // public function store(Request $request)
+
     {
         $data = (array) $request->all();
+        // dd(['data' => $data]);
         $create = $this->users->create($data);
 
         if($create) {
@@ -118,7 +121,6 @@ class ManageUserController extends MyController
     public function update(Request $request, $id)
     {   
         $params = [];
-        // $params = $request->except(['_token', '_method']);
 
         if($request->has('firstname')) {
             $params['firstname'] = $request->firstname;
@@ -141,18 +143,15 @@ class ManageUserController extends MyController
         $update = $this->users->update($id, $params);
 
         if($this->isSuperAdmin() && empty($this->userRoles)) {
-            dd('11');
             return redirect()->route('dashboard')->with('error', 'ไม่สามารถทำรายการได้ กรุณาตรวจสอบ User roles ในระบบ');
         }
 
         if(!$update) 
         {
-            dd('22');
             return redirect()->route('dashboard')->with('error', 'ไม่สามารถทำรายการได้ กรุณาลองอีกครั้ง');
         }
         else 
         {
-            dd('33');
             return redirect()->route('users.edit', [$id])->with('success', 'แก้ไขรายการสำเร็จ');
         }
     }
