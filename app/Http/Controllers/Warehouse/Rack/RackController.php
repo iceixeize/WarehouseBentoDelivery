@@ -30,7 +30,7 @@ class RackController extends MyController
     public function index($subdomain, Request $request)
     {
             if($request->ajax()) {
-                
+
             $data = \App\Models\Rack::with(['shelf' => function ($query) use ($request) {
                 $query->selectRaw(DB::raw('shelf.*, shelf_type.shelf_type AS "type_name", store.store_name, store.store_id, renting.*'));
                 $query->orderBy('shelf.shelf_seq', 'ASC');
@@ -46,10 +46,10 @@ class RackController extends MyController
                     $join->on('shelf.shelf_id', '=', 'renting.shelf_id');
                     $join->leftJoin('store', 'store.store_id', '=', 'renting.store_id');
 
-                    
+
 
                 })->active();
-                
+
                 if($request->has('store_name')) {
                     $query->where('store.store_name', 'like', '%' . $request->store_name . '%');
                 }
@@ -63,7 +63,7 @@ class RackController extends MyController
                 $data = $data->where('rack.rack_no', 'like', '%' . $request->rack_no . '%');
             }
 
-            
+
 
             if($request->has('order_by')) {
                 if($request->order_by == "seq") {
@@ -72,7 +72,7 @@ class RackController extends MyController
             } else {
                 $data = $data->orderByRaw('rack.rack_no', 'ASC');
             }
-            
+
             $data = $data->paginate(5);
 
             if(empty($data)) {
@@ -80,6 +80,7 @@ class RackController extends MyController
             } else {
                 return response()->json(['success' => 1, 'data' => $data]);
             }
+
 
         }
         return view('rack._show');
@@ -91,12 +92,12 @@ class RackController extends MyController
      * @return \Illuminate\Http\Response
      */
     public function create($subdomain, Request $request)
-    {        
+    {
         $lastRack = \App\Models\Rack::selectRaw('CAST(rack_no AS UNSIGNED) AS "rack_no"')
                 ->where('warehouse_id', $this->getWarehouseData()->warehouse_id)
                 ->orderBy('rack_no', 'desc')
                 ->first();
-        
+
         if(is_null($lastRack)) {
             $rackNo = 1;
         } else if(is_numeric($lastRack->rack_no)) {
@@ -129,7 +130,7 @@ class RackController extends MyController
         $arraySubshelf = [];
 
         foreach($request->selectShelfType as $index => $shelfTypeId) {
-            $arrayShelfType[] = 
+            $arrayShelfType[] =
                 [
                     'shelf_type_id' => $shelfTypeId,
                     'shelf_type' => $request->selectShelfUnit[$index],
@@ -148,7 +149,7 @@ class RackController extends MyController
         if(!empty($createRack)) {
             foreach($createRack as $index => $shelf) {
                 $shelfData = \App\Models\Shelf::find($shelf->shelf_id);
-                
+
                 if(!empty($shelfData)) {
                     $arraySubshelf = [];
                     for($i = 1; $i <= config('btd.rack.default_subshelf'); $i++) {
@@ -170,7 +171,7 @@ class RackController extends MyController
                             $updateBarcode = \App\Models\BarcodeAutoNumber::where('keyword', 'subshelf')
                                             ->update(['seq' => $maxBarcode->seq + 1]);
                         } else {
-                          // not exist  
+                          // not exist
                         }
 
                         $arraySubshelf[] = [
@@ -181,10 +182,10 @@ class RackController extends MyController
 
                             'shelf_id' => $shelf->shelf_id,
                         ];
-                        
+
                     }
 
-                    $arrayShelf[$shelf->shelf_id] = $arraySubshelf;                    
+                    $arrayShelf[$shelf->shelf_id] = $arraySubshelf;
                 }
                     $createSubshelf = $shelfData->subshelf()->createMany($arraySubshelf);
                     if(empty($createSubshelf)) {
@@ -195,8 +196,8 @@ class RackController extends MyController
         } else {
             return redirect()->route('racks.index', [$subdomain])->with('error', 'ไม่สามารถสร้างชั้นวางสินค้าได้ กรุณาลองอีกครั้ง');
         }
-   
-        
+
+
     }
 
     /**
@@ -210,7 +211,7 @@ class RackController extends MyController
         if($request->ajax()) {
                 $data = \App\Models\Rack::with(['subshelf', 'shelf' => function ($query) {
 
-                    $query->selectRaw('shelf.*, shelf_type.shelf_type AS "type_name", store.store_name, store.store_id, renting.*, COUNT(subshelf.subshelf_id) AS "count_subshelf", 
+                    $query->selectRaw('shelf.*, shelf_type.shelf_type AS "type_name", store.store_name, store.store_id, renting.*, COUNT(subshelf.subshelf_id) AS "count_subshelf",
                     max_subshelf, IFNULL(amount_of_pd, 0) AS "amount_of_pd", IFNULL(max_subshelf, 1) AS "max_subshelf_has_product", shelf.shelf_type_id AS "type_id", shelf.shelf_type AS "shelf_unit", shelf.shelf_id');
                     $query->orderBy('shelf.shelf_seq', 'ASC');
                     $query->orderBy('renting.date_start', 'ASC');
@@ -244,7 +245,7 @@ class RackController extends MyController
 
                     $query->orderBy('shelf.shelf_seq');
 
-                }])        
+                }])
                 ->active()
                 ->where('rack.warehouse_id', $this->getWarehouseData()->warehouse_id)
                 ->where('rack.rack_id', $id)
@@ -260,7 +261,7 @@ class RackController extends MyController
                 $shelfType = \App\Models\ShelfType::all();
                 return view('rack._edit', ['id' => $id, 'shelfType' => $shelfType, 'subdomain' => $subdomain]);
             }
-        
+
     }
 
     public function editPickSequence($subdomain = '', $id = '', Request $request)
@@ -295,9 +296,9 @@ class RackController extends MyController
                 $arrayUpdateShelf = [];
                 $seq = 1;
 
-                $lastShelfId = array_filter($request->shelfId);  
+                $lastShelfId = array_filter($request->shelfId);
                 $arrayRemoveShelf = array_diff($rack->shelf()->pluck('shelf_id')->toArray(), $lastShelfId);
-                
+
                 // delete shelf
                 if(!empty($arrayRemoveShelf)) {
                     $delShelf = $rack->shelf()->whereIn('shelf_id', $arrayRemoveShelf)->update([
@@ -318,7 +319,7 @@ class RackController extends MyController
                 foreach($request->shelfId as $index => $shelfId) {
 
                     if(is_null($shelfId)) {
-                        
+
                         $arrNewShelf = [
                             'shelf_no' => $request->shelfNo[$index],
                             'shelf_type_id' => $request->selectShelfType[$index],
@@ -332,12 +333,12 @@ class RackController extends MyController
 
                         if(!empty($arrNewShelf)) {
                             $newShelf = $rack->shelf()->insertGetId($arrNewShelf);
-        
+
                             if(!$newShelf) {
                                 \Log::info('**** can\'t new shelf data : ' . json_encode($arrayNewShelf));
                             }
 
-                            
+
                         }
 
                         // $arrayNewSubshelf = [];
@@ -347,12 +348,12 @@ class RackController extends MyController
                                             ->where('keyword', 'subshelf')
                                             ->where('value', date('y') . date('m'))
                                             ->first();
-        
+
                                 if(is_null($maxBarcode)) {
                                     $updateBarcode = \App\Models\BarcodeAutoNumber::where('keyword', 'subshelf')
                                                     ->update(['seq' => 1, 'value' => date('y') . date('m')]);
                                     $barcode = config('btd.rack.barcode_prefix_ss') . date('y') . date('m') . (sprintf("%0" . config('btd.rack.barcode_length_subshelf') . "d", 1));
-        
+
                                     $updateBarcode = \App\Models\BarcodeAutoNumber::where('keyword', 'subshelf')
                                                     ->update(['seq' => 2]);
                                 } else if($maxBarcode->exists()) {
@@ -360,9 +361,9 @@ class RackController extends MyController
                                     $updateBarcode = \App\Models\BarcodeAutoNumber::where('keyword', 'subshelf')
                                                     ->update(['seq' => $maxBarcode->seq + 1]);
                                 } else {
-                                  // not exist  
+                                  // not exist
                                 }
-        
+
                                 $arrayNewSubshelf[] = [
                                     'subshelf_no' => $i,
                                     'warehouse_id' => $rack->warehouse_id,
@@ -370,11 +371,11 @@ class RackController extends MyController
                                     'subshelf_barcode' => $barcode,
                                     'shelf_id' => $newShelf,
                                 ];
-                                
-                            }                            
-                        
-                            
-                        
+
+                            }
+
+
+
 
                         array_push($arrayNewShelf, $arrNewShelf);
                     } else {
@@ -397,12 +398,12 @@ class RackController extends MyController
                             }
                         }
                     }
-                    
+
                     $seq++;
                     $arrNewShelf = [];
                 }
 
-                
+
                 if(!empty($arrayNewSubshelf)) {
                     $newSubshelf = $rack->subshelf()->createMany(
                         $arrayNewSubshelf
@@ -456,18 +457,18 @@ class RackController extends MyController
 
 
         if(!empty($data)) {
-            
+
             $hasProductInShelf = $data->where('amount_pd', '>', 0);
             // if($hasProductInShelf)
             if($hasProductInShelf->count() > 0) {
                 // ลบไม่ได้
                 return redirect()->route('racks.index', ['subdomain' => $subdomain]);
         }
-    }     
+    }
 
 
     $deleteRack = \App\Models\Rack::where('rack_id', $id)->first();
-    
+
     if($deleteRack) {
         $deleteRack->delete();
     }
@@ -483,7 +484,7 @@ class RackController extends MyController
     public function destroy($subdomain, $id = '')
     {
         dd('--- destroy ---');
-        
-        
+
+
     }
 }
