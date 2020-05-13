@@ -3,7 +3,9 @@
         <b-jumbotron header-level="5" bg-variant="white">
             <template v-slot:header>User data</template>
             <hr class="my-4" />
-            <b-form>
+            <b-form :action="link_update" method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="_token" :value="csrf" />
             <b-container fluid>
                 <b-row class="my-1">
                     <b-col sm="3">
@@ -13,6 +15,7 @@
                     </b-col>
                     <b-col sm="9">
                         <b-form-input
+                            name="firstname"
                             type="text"
                             :value="auth_user.firstname"
                         ></b-form-input>
@@ -27,6 +30,7 @@
                     </b-col>
                     <b-col sm="9">
                         <b-form-input
+                            name="lastname"
                             type="text"
                             :value="auth_user.lastname"
                         ></b-form-input>
@@ -41,6 +45,7 @@
                     </b-col>
                     <b-col sm="9">
                         <b-form-input
+                            name="idCard"
                             type="text"
                             :value="auth_user.id_card"
                         ></b-form-input>
@@ -54,7 +59,7 @@
                         >
                     </b-col>
                     <b-col sm="9">
-                        <b-form-select v-model="genderSelected" :options="genderOptions"></b-form-select>
+                        <b-form-select name="gender" v-model="genderSelected" :options="genderOptions"></b-form-select>
                     </b-col>
                 </b-row>
 
@@ -66,6 +71,7 @@
                     </b-col>
                     <b-col sm="9">
                         <b-form-input
+                            name="birthday"
                             type="date"
                             :value="auth_user.birthday"
                         ></b-form-input>
@@ -80,6 +86,7 @@
                     </b-col>
                     <b-col sm="9">
                         <b-form-input
+                            name="tel"
                             type="text"
                             :value="auth_user.tel"
                         ></b-form-input>
@@ -93,13 +100,13 @@
                         >
                     </b-col>
                     <b-col sm="9">
-                        <b-form-select v-model="roleSelected" :options="roleOptions"></b-form-select>
+                        <b-form-select name="userRolesId" v-model="roleSelected" :options="roleOptions"></b-form-select>
                     </b-col>
                 </b-row>
 
                 <b-row>
                     <b-col sm="9" offset-sm="3" class="mt-3">
-                        <b-button variant="danger">แก้ไข</b-button>
+                        <b-button variant="danger" type="submit">แก้ไข</b-button>
                         <b-button variant="light" type="reset">ยกเลิก</b-button>
 
                     </b-col>
@@ -112,10 +119,14 @@
 
 <script>
 export default {
-    props: ["errors", "error", "success", "auth_user", "user_roles"],
+    
+    props: ["errors", "error", "success", "auth_user", "user_roles", "link_update"],
     components: {},
     data() {
         return {
+            csrf: document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
             genderSelected: this.auth_user.gender,
             genderOptions: [
                 { value: 'male', text: 'ชาย' },
@@ -127,7 +138,11 @@ export default {
             
         };
     },
+    methods: {
+
+    },
     mounted() {
+        console.log('link update : ' + this.link_update);
         console.log(this.user_roles);
         if(this.user_roles.length > 0) {
             let vueInstance = this;
