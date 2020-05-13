@@ -73,7 +73,7 @@ Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['aut
 });
 
 Route::group(['middleware' => ['auth', 'domain']], function() {
-    Route::get('/dashboard-datatable', 'Manage\Dashboard@index');
+    Route::get('/dashboard-datatable', 'Manage\Dashboard@index')->name('dashboard');
 
     Route::name('manage.users.datatable')->get('/users-datatable', 'Manage\ManageUserController@datatable');
     Route::resource('/users', 'Manage\ManageUserController');
@@ -81,14 +81,7 @@ Route::group(['middleware' => ['auth', 'domain']], function() {
         return view('welcome');
     });
 
-    // Route::name('manage.users')->get('/users', function () {
-    //     return view('manage._manage_user');
-    // });
-    // Route::resource('/users', 'Manage\ManageUserController');
-
-    // Route::get('/test', function() {
-    //     return view('test');
-    // });
+    Route::get('/user/{id}', 'UserController@show');
 
     Route::get('/test', 'TestController@index')->name('test.test');
 
