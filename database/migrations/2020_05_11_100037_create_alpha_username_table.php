@@ -15,7 +15,18 @@ class CreateAlphaUsernameTable extends Migration
     {
         Schema::create('alpha_username', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('username', 60);
+            $table->string('company_name', 60);
+            $table->string('company_short_name', 60);
+            $table->string('bank_id', 60);
+            $table->string('account_name', 60);
+            $table->string('account_number', 60);
+            $table->string('firstname', 60);
+            $table->string('lastname', 60);
+            $table->string('email', 60);
+            $table->string('mobile', 60);
+
+            $table->timestamps(0);
         });
     }
 
