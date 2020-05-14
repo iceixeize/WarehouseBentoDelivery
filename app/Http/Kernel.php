@@ -20,6 +20,12 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
+        /*
+         * PERMISSION
+         */ 
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+	    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
     ];
 
     /**
@@ -64,6 +70,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'domain' => \App\Http\Middleware\ValidateDomain::class,
         'accesswarehouse' => \App\Http\Middleware\AccessWarehouse::class,
-
+        // 'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }
