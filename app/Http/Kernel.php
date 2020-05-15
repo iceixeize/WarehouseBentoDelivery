@@ -24,8 +24,8 @@ class Kernel extends HttpKernel
         /*
          * PERMISSION
          */ 
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-	    'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        // \Spatie\Permission\Middlewares\RoleMiddleware::class,
+	    // \Spatie\Permission\Middlewares\PermissionMiddleware::class,
     ];
 
     /**
@@ -70,6 +70,10 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'domain' => \App\Http\Middleware\ValidateDomain::class,
         'accesswarehouse' => \App\Http\Middleware\AccessWarehouse::class,
-        // 'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+
+        
     ];
 }

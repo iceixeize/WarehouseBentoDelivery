@@ -14,17 +14,22 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-        	'username' => 'System', 
-            'firstname' => 'System',
-            'lastname' => 'System',
+        $user = factory(User::class)->create([
+                'username' => 'System', 
+                'firstname' => 'System',
+                'lastname' => 'System',
         ]);
-  
-        $role = Role::create(['name' => 'Admin']);
-   
-        $permissions = Permission::pluck('id','id')->all();
-  
-        $role->syncPermissions($permissions);
+
+        $role = Role::create(['name' => 'Super Admin']);
+        $viewRolesPermission = Permission::create(['name' => 'view roles']);
+        $editRolesPermission = Permission::create(['name' => 'edit roles']);
+        $deleteRolesPermission = Permission::create(['name' => 'delete roles']);
+
+        $role->syncPermissions([
+            $viewRolesPermission,
+            $editRolesPermission,
+            $deleteRolesPermission,
+        ]);
    
         $user->assignRole([$role->id]);
     }

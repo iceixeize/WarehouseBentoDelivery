@@ -10,4 +10,9 @@ return [
         'barcode_prefix_ss' => 'ss',
         'max_shelf_unit' => 4,
     ],
+
+    'genders' => [
+        'male',
+        'female',
+    ],
 ];
