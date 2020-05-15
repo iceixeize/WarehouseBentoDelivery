@@ -13,7 +13,7 @@ use App\Repositories\UserRolesRepository;
 
 class ManageUserController extends MyController
 {
-    protected $users;
+    protected $userRepository;
     protected $userRoles;
 
     /**
@@ -22,9 +22,9 @@ class ManageUserController extends MyController
      * @param  UserRepository  $users
      * @return void
      */
-    public function __construct(UserRepository $users, UserRolesRepository $userRoles)
+    public function __construct(UserRepository $userRepository, UserRolesRepository $userRoles)
     {
-        $this->users = $users;
+        $this->userRepository = $userRepository;
         $this->userRoles = $userRoles;
     }
 
@@ -165,5 +165,9 @@ class ManageUserController extends MyController
     public function destroy($id)
     {
         //
+    }
+
+    public function showAllBlockedUsers() {
+        $this->userRepository->getAllBlockedUsers();
     }
 }

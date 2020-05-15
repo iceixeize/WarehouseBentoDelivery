@@ -20,7 +20,7 @@
         "laravelcollective/html": "^6.1",
         "predis/predis": "^1.1",
         "proengsoft/laravel-jsvalidation": "^3.0",
-        "spatie/laravel-permission": "^3.11"
+        "spatie/laravel-permission": "^3.12"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
