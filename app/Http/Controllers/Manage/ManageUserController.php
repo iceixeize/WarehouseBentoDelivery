@@ -10,6 +10,7 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\UserRepository as UserRepository;
 use App\Repositories\UserRolesRepository;
+use App\Models\User;
 
 class ManageUserController extends MyController
 {
@@ -34,7 +35,7 @@ class ManageUserController extends MyController
     }
     
     public function datatable(Request $request) {
-        $data = \App\User::with('userRoles');
+        $data = \App\Models\User::with('userRoles');
             if(!$this->isSuperAdmin()) {
                 $data->where('user_roles_id', '!=', 1);
             }
@@ -43,12 +44,7 @@ class ManageUserController extends MyController
             return new DataTableCollectionResource($data);
     }
 
-    /**
-     * Show the user with the given ID.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+
     public function show($id)
     {
         $data = $this->users->get($id);
@@ -89,16 +85,8 @@ class ManageUserController extends MyController
         }
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-
         $roles = [];
 
         if($this->isSuperAdmin()) {
@@ -108,16 +96,9 @@ class ManageUserController extends MyController
                 return redirect()->route('dashboard');
             }
         }
-        return view('manage._edit_user', ['userData' => Auth::user(), 'id' => $id, 'roles' => $roles]);
+        return view('manage._edit_user', ['userData' => auth()->user(), 'id' => $id, 'roles' => $roles]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {   
         $params = [];
@@ -162,12 +143,14 @@ class ManageUserController extends MyController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         //
     }
 
     public function showAllBlockedUsers() {
         $this->userRepository->getAllBlockedUsers();
+
+        return '';
     }
 }

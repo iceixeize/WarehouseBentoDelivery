@@ -45,7 +45,7 @@
                   <template v-slot:button-content>
                     {{ Auth::user()->username }} 
                   </template>
-                  <b-dropdown-item href="{{ route('users.edit', [Auth::user()->user_id]) }}">Profile</b-dropdown-item>
+                  <b-dropdown-item href="{{ route('users.edit', [auth()->user()->id]) }}">Profile</b-dropdown-item>
                   <b-dropdown-item href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">{{ __('Logout') }}</b-dropdown-item>

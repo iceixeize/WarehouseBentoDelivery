@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['auth', 'domain', 'accesswarehouse']], function() {
+Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['auth']], function() {
     // dd('suvbbb');
 
 
@@ -72,7 +72,7 @@ Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['aut
 
 });
 
-Route::group(['middleware' => ['auth', 'domain']], function() {
+Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard-datatable', 'Manage\Dashboard@index')->name('dashboard');
 
     Route::name('manage.users.datatable')->get('/users-datatable', 'Manage\ManageUserController@datatable');
