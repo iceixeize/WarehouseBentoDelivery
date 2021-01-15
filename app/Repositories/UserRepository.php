@@ -2,58 +2,38 @@
 
 namespace App\Repositories;
 
-use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
-use App\User;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
-/**
- * Class UserRepository.
- */
-class UserRepository implements AllRepositoryInterface
+class UserRepository
 {
-    /**
-     * Get's a post by it's ID
-     *
-     * @param int
-     * @return collection
-     */
-    public function get($id)
+    public function get(int $id): User
     {
         return User::find($id);
     }
 
-    public function create($params = []) {
+    public function create(array $params = []): User 
+    {
         return User::create($params);
     }
 
-    /**
-     * Get's all posts.
-     *
-     * @return mixed
-     */
-    public function all()
+    public function all(): Collection
     {
         return User::all();
     }
 
-    /**
-     * Deletes a post.
-     *
-     * @param int
-     */
-    public function delete($id)
+    public function delete($id): int
     {
         return User::destroy($id);
     }
 
-    /**
-     * Updates a post.
-     *
-     * @param int
-     * @param array
-     */
-    public function update($id, array $data)
+    public function update(int $id, array $data): int
     {
-        // dd(['id' => $id, 'data' => $data]);
         return User::where('user_id', $id)->update($data);
+    }
+
+    public function getAllBlockedUsers(): Collection
+    {
+        return User::where('is_blocked', true)->get();
     }
 }

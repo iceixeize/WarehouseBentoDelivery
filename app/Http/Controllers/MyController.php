@@ -29,11 +29,11 @@ class MyController extends Controller
         // $parameters = $request->route()->parameters();
     //  dd(['p' => $parameters, 'sub' => request("sub")]);
 
-        if(isset($subdomain) && !empty($subdomain)) {
-            $this->warehouseData = app('warehouse', ['subdomain' => $subdomain]);
-        }
+        // if(isset($subdomain) && !empty($subdomain)) {
+        //     $this->warehouseData = app('warehouse', ['subdomain' => $subdomain]);
+        // }
 
-        $this->userRoles = \App\Models\UserRoles::all();
+        // $this->userRoles = \App\Models\UserRoles::all();
     }
 
     protected function getWarehouseData()

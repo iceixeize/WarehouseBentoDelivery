@@ -17,8 +17,10 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
+        "laravelcollective/html": "^6.1",
         "predis/predis": "^1.1",
-        "proengsoft/laravel-jsvalidation": "^3.0"
+        "proengsoft/laravel-jsvalidation": "^3.0",
+        "spatie/laravel-permission": "^3.12"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

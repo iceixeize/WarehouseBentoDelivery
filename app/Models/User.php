@@ -1,90 +1,68 @@
 <?php
 
 namespace App\Models;
-use App\Scopes\DeletedScope;
 
-class User extends MyModel
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
+
+class User extends Authenticatable
 {
-    const CREATED_AT = 'date_create';
-    const UPDATED_AT = 'date_modified';
+    use Notifiable;
+    use HasRoles;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'firstname', 
+        'lastname', 
+        'username', 
+        'password', 
+        'is_blocked', 
+        'birthday', 
+        'gender', 
+        'phone_number', 
+        'id_card', 
+        'email', 
+    ];
 
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
-    protected $attributes = []; // define default value
-    
-    // Mutators
-    protected $dates = []; // additional date attributes to convert columns to instances of Carbon, which extends the PHP
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'is_blocked' => 'boolean',
-        'deleted' => 'boolean',
+        'birthday' => 'date',
     ];
-    protected $appends = []; // append value to JSON (Eloquent > Serialization)
-    protected $hidden = []; // hiding attributes from JSON (Eloquent > Serialization)
-    
 
-    protected static function boot() {
-        parent::boot();
-        static::addGlobalScope(new DeletedScope);
+    protected $table = 'users';
 
-        static::created(function ($model) {
-            
-        });
-        static::updated(function ($model) {
-            
-        });
-        static::deleted(function ($model) {
-            
-        });
-    }
+    // protected $primaryKey = 'user_id';
 
-    /*
-    |--------------------------------------------------
-    | Cache
-    |--------------------------------------------------
-    */
+    // const CREATED_AT = 'date_create';
+    // const UPDATED_AT = 'date_modified';
 
-
-
-    /*
-    |--------------------------------------------------
-    | Static
-    |--------------------------------------------------
-    */
-
-
-
-    /*
-    |--------------------------------------------------
-    | Function
-    |--------------------------------------------------
-    */
-
-
-    
-    /*
-    |--------------------------------------------------
-    | Get
-    |--------------------------------------------------
-    */
-
-
-
-    /*
-    |--------------------------------------------------
-    | Set
-    |-------------------------------------------------
-    */
-
-
-
-    /*
+        /*
     |--------------------------------------------------
     | Scope
     |--------------------------------------------------
     */
     public function scopeIsNotBlock($query)
     {
-        return $query->where('is_block', 0);
+        return $query->where('is_blocked', 0);
     }
 
 
@@ -93,6 +71,11 @@ class User extends MyModel
     | Relation
     |--------------------------------------------------
     */
+
+    public function accessWarehouse()
+    {
+        return $this->hasMany('App\Models\AccessWarehouse', 'user_id');
+    }
 
     public function accessWarehouseHistory()
     {
@@ -308,14 +291,9 @@ class User extends MyModel
     {
         return $this->belongsToMany('App\Models\Warehouse', 'access_warehouse', 'user_id', 'warehouse_id');
     }
-    
-    /*
-    |--------------------------------------------------
-    | Private
-    |--------------------------------------------------
-    */
 
-
-
-    
+    public function userRoles()
+    {
+        return $this->belongsTo('App\Models\UserRoles', 'user_roles_id');
+    }
 }

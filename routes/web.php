@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['auth', 'domain', 'accesswarehouse']], function() {
+Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['auth']], function() {
     // dd('suvbbb');
 
 
@@ -72,7 +72,7 @@ Route::group(['domain' => '{subdomain}.bentodelivery.com', 'middleware' => ['aut
 
 });
 
-Route::group(['middleware' => ['auth', 'domain']], function() {
+Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard-datatable', 'Manage\Dashboard@index')->name('dashboard');
 
     Route::name('manage.users.datatable')->get('/users-datatable', 'Manage\ManageUserController@datatable');
@@ -90,5 +90,25 @@ Route::group(['middleware' => ['auth', 'domain']], function() {
     })->name('manage.dashboard');
 
     Route::get('/choosewarehouse', 'Manage\ChooseWarehouseController@index')->name('manage.choosewarehouse');
+
+    Route::group(['middleware' => ['role:super-admin']], function () {
+        //
+    });
+    
+    Route::group(['middleware' => ['permission:publish articles']], function () {
+        //
+    });
+    
+    Route::group(['middleware' => ['role:super-admin','permission:publish articles']], function () {
+        //
+    });
+    
+    Route::group(['middleware' => ['role_or_permission:super-admin|edit articles']], function () {
+        //
+    });
+    
+    Route::group(['middleware' => ['role_or_permission:publish articles']], function () {
+        //
+    });
 });
 
